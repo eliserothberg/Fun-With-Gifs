@@ -1,0 +1,57 @@
+button, div, form, input {
+      margin: 10px;
+    }
+
+body, html  {
+  padding: 0;
+  height: 100%;
+  font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+  background-image: url(../images/stand-up.png);
+  width: 980px;
+}
+
+   .col-sm-12 {
+  margin-top: 15px;
+  float: left;
+}
+
+.item {
+  display:inline-block;
+  position:relative;
+  /*max-height: 112px;*/
+  margin-top: 10px;
+  /*padding-top: 20px;
+  padding-bottom: 20px;*/
+}
+
+.container {
+  width: 100%;
+}
+h1 {
+  color: #ff0000;
+  font-size: 26px;
+
+}
+
+label {
+  color: #ff0000;
+  font-size: 16px;
+}
+
+p {
+  color: #ffff99;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+#oops {
+  font-size: 12px;
+}
+
+img {
+  max-height: 112px;
+}
+
+button.comedian:hover {
+color: red;
+}
