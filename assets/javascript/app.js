@@ -1,10 +1,79 @@
 $(document).ready(function() {
 
+
 var results;
-var resultsArray = [];
+var comedianImage;
+
   // Initial array of comedians
-  var comedians = ['Eddie Izzard', 'Chris Rock', 'George Carlin', 'Sarah Silverman', 'Patton Oswalt', 'Louis CK', 'Aziz Ansari', 'Nick Offerman', 'Amy Schumer', 'Denis Leary'];
-  // console.log(comedians[3]);
+var topics = ['Eddie Izzard', 'Chris Rock', 'George Carlin', 'Sarah Silverman', 
+'Patton Oswalt', 'Louis CK', 'Aziz Ansari', 'Nick Offerman', 'Amy Schumer', 
+'Denis Leary', 'Steve Marmel', 'Jann Karam', 'Jerry Seinfeld', 'Natasha Leggero'];
+
+  function comedianInfo(){
+
+    // $('button.comedian').on('click', function() {
+        var comedian = $(this).attr('data-name');
+
+        console.log(comedian);
+
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + comedian + 
+        "&api_key=dc6zaTOxFJmzC&limit=10";
+
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+          })
+          .done(function(response) {
+
+              // console.log("this is id[1] " + response.data[1].id);
+              // console.log("this is fixed_w still " + response.data[1].images.fixed_width_still.url);
+              // console.log("this is fixed_w animated " + response.data[1].images.fixed_width.url);
+
+            results = response.data;
+
+            for (var i = 0; i < results.length; i++) {
+              var comedianDiv = $('<div class="item">')
+              var rating = results[i].rating.toUpperCase();
+
+              if (!rating == "") {
+                var p = $('<p>').text( "Rated " + rating);
+              }
+              else {
+                p = $('<p>').text( "Not rated");
+              }
+
+              comedianImage = $('<img>');
+              comedianImage.attr('src', results[i].images.fixed_width_still.url);  
+              comedianImage.attr('data-still', results[i].images.fixed_width_still.url);
+              comedianImage.attr('data-animate', results[i].images.fixed_width.url);
+              comedianImage.attr('data-state', 'still');
+              comedianImage.attr('class', 'comedianImage');
+              comedianImage.attr('alt', 'comedian image');
+
+              comedianDiv.append(p)
+              comedianDiv.prepend(comedianImage)
+
+              $('#imagesHere').prepend(comedianDiv);
+
+                $(comedianImage).on('click', function(){
+                
+                  var state = $(this).attr('data-state');
+                
+                    if ( state == 'still'){
+                     $(this).attr('src', $(this).data('animate'));
+                     $(this).attr('data-state', 'animate');
+                   }
+                   else {
+                     $(this).attr('src', $(this).data('still'));
+                     $(this).attr('data-state', 'still');
+                   }
+                 // console.log("state = " + state);
+                });
+            };
+        }); 
+    };
+  
+   // comedianInfo();
 
   function renderButtons(){ 
 
@@ -12,118 +81,46 @@ var resultsArray = [];
     $('#buttonsView').empty();
 
     // Loops through the array of comedians
-    for (var i = 0; i < comedians.length; i++){
-
+      for (var i = 0; i < topics.length; i++){
       // Dynamically generate buttons for each comedian in the array and add them to buttonsView div
-
-        var a = $('<button>') 
-        a.addClass('comedian'); 
-        a.attr('data-name', comedians[i]); 
-        a.text(comedians[i]); 
-        $('#buttonsView').append(a);
-    }
-  };
-
-  $('#addComedian').on('click', function(){
-
-    // grab the input from the textbox
-    var comedian = $('#comedian-input').val().trim();
-
-    // comedian choice from the textbox added to array
-    comedians.push(comedian);
-    
-    renderButtons();
-
-    // We have this line so that users can hit "enter" instead of clicking on the button and it won't move to the next page
-    return false;
-  });
+        var add = $('<button>') 
+        add.addClass('comedian'); 
+        add.attr('data-name', topics[i]); 
+        add.text(topics[i]); 
+        $('#buttonsView').append(add);
+      }
+  }
 
   renderButtons();
 
-  // function displaycomedianInfo(){
+  // function addComs(){ 
+    
+    $('#addComedian').on('click', function(){
 
-    $('button.comedian').on('click', function() {
-        var comedian = $(this).attr('data-name');
-        var state = $(this).attr('data-state'); 
+    // Grab the input from the textbox
+    var comedian = $('#comedian-input').val().trim();
 
-        console.log(comedian);
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + comedian + "&api_key=dc6zaTOxFJmzC&limit=10";
+    // input from the textbox added to array
+    topics.push(comedian);
+   
+    //Remove old text from input box when you click on the input box again
+      $('#comedian-input').focus(
+        function(){
+          $(this).val('');
+      });
 
-        $.ajax({
-                url: queryURL,
-                method: 'GET'
-            })
-            .done(function(response) {
-               
-                console.log("this is id " + response.data[1].id);
-                console.log("this is fw still " + response.data[1].images.fixed_width_still.url);
-                console.log("this is fw animated " + response.data[1].images.fixed_width.url);
+    renderButtons();
 
-                
-                results = response.data;
-                 console.log(results[1]);
-                // .image_original_url;
-                // console.log(results);
-
-                // results.append(resultsArray);
-
-                // for (var i = 0; i < results.length; i++) {
-                //   resultsArray.push(results[i].images.fixed_width.url);
-                  
-                // }
-                // console.log("resultsArry: " + resultsArray);
-
-                for (var i = 0; i < results.length; i++) {
-                    var comedianDiv = $('<div class="item">')
-                    var rating = results[i].rating;
-
-                    if (!rating == "") {
-                    var p = $('<p>').text( "Rating: " + rating);
-                  }
-                  else {
-                    var p = $('<p>').text( "Rating: not rated");
-                  }
-
-                    // console.log("resp1 = " + response[1].id);
-
-                    var comedianImage = $('<img>');
-                    comedianImage.attr('src', results[i].images.fixed_width.url);
-
-                $(comedianImage).on('click', function(){
-                  for (var i = 0; i < results.length; i++) {
-                if (comedianImage.attr('src', results[i].images.fixed_width_still.url)){
-                  //hide and show??
-                $(this).attr('src', $(this).data(results[i].images.fixed_width.url));
-                // $(this).attr('data-state', 'animate');
-            }else{
-                $(this).attr('src', $(this).data(results[i].images.fixed_width_still.url));
-                // $(this).attr('data-state', 'still');
-            }
-          }
-          });
-            console.log('this =' + $(this).data(results[i].images.fixed_width_still.url));
-            console.log($(this).data(results[1]));
-            console.log("comedianImage.attr('src etc = " + comedianImage.attr('src', results[i].images.fixed_width_still.url));
-
-                    comedianImage.attr('alt', 'comedian image');  
-
-                    comedianDiv.append(p)
-                    comedianDiv.prepend(comedianImage)
-
-                    $('#gifsHere').prepend(comedianDiv);
-                    // this = results;
-                    // $this = comedianImage;
-
-
-                };
-           });     
-            });
-    // };
-console.log();
-    // $(document).on('click', 'comedian', displaycomedianInfo);
-
-    // renderButtons();
-//call function
-//loop
+    // To prevent pressing "enter" from causing a move to the next page
+    return false;
 
     });
+  // };
+
+  // addComs();
+
+  // comedianInfo();
+
+  $(document).on('click', '.comedian', comedianInfo);
+
+});
