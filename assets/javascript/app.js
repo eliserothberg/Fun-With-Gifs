@@ -16,7 +16,7 @@ var topics = ['Eddie Izzard', 'Chris Rock', 'George Carlin', 'Sarah Silverman',
 
         console.log(comedian);
 
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + comedian + 
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + comedian + 
         "&api_key=dc6zaTOxFJmzC&limit=10";
 
         $.ajax({
